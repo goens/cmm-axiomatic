@@ -1,3 +1,12 @@
+# Compound Memory Models
+
+
+Andrés Goens, Soham Chakraborty, Susmit Sarkar, Sukarn Agarwal, Nicolai Oswald and Vijay Nagarajan, "Compound Memory Models", (conditionally) accepted for publication in _Proceedings of the 44th ACM SIGPLAN International Conference on Programming Language Design and Implementation (PLDI ’23)_, June 17-21, 2023, Orlando, Florida, USA.
+
+[Paper](addme.pdf)
+
+This repository adds the Alloy formalization of two memory models, x86TSO and compound x86TSO-PTX (CMM) to the NVIDA PTX model, which it is based on:
+
 # PTX Memory Consistency Model
 
 Daniel Lustig, Sameer Sahasrabuddhe, and Olivier Giroux, "A Formal Analysis of the NVIDIA PTX Memory Consistency Model", in _Proceedings of the 24th ACM International Conference on Architectural Support for Programming Languages and Operating Systems (ASPLOS ’19)_, April 13–17, 2019, Providence, RI, USA.

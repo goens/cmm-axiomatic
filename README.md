@@ -1,9 +1,9 @@
 # Compound Memory Models
 
 
-Andrés Goens, Soham Chakraborty, Susmit Sarkar, Sukarn Agarwal, Nicolai Oswald and Vijay Nagarajan, "Compound Memory Models", (conditionally) accepted for publication in _Proceedings of the 44th ACM SIGPLAN International Conference on Programming Language Design and Implementation (PLDI ’23)_, June 17-21, 2023, Orlando, Florida, USA.
+Andrés Goens, Soham Chakraborty, Susmit Sarkar, Sukarn Agarwal, Nicolai Oswald and Vijay Nagarajan, "Compound Memory Models", accepted for publication in _Proceedings of the 44th ACM SIGPLAN International Conference on Programming Language Design and Implementation (PLDI ’23)_, June 17-21, 2023, Orlando, Florida, USA.
 
-[Paper](addme.pdf)
+[Paper](CompoundMemoryModelsPLDI23.pdf)
 
 This repository adds the Alloy formalization of two memory models, x86TSO and compound x86TSO-PTX (CMM) to the NVIDA PTX model, which it is based on:
 

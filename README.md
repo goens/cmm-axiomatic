@@ -1,7 +1,7 @@
 # Compound Memory Models
 
 
-Andrés Goens, Soham Chakraborty, Susmit Sarkar, Sukarn Agarwal, Nicolai Oswald and Vijay Nagarajan, "Compound Memory Models", accepted for publication in _Proceedings of the 44th ACM SIGPLAN International Conference on Programming Language Design and Implementation (PLDI ’23)_, June 17-21, 2023, Orlando, Florida, USA.
+Andrés Goens, Soham Chakraborty, Susmit Sarkar, Sukarn Agarwal, Nicolai Oswald and Vijay Nagarajan, "Compound Memory Models", in _Proceedings of the 44th ACM SIGPLAN International Conference on Programming Language Design and Implementation (PLDI ’23)_, June 17-21, 2023, Orlando, Florida, USA.
 
 [Paper](CompoundMemoryModelsPLDI23.pdf)
 

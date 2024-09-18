@@ -39,6 +39,7 @@ sig Write extends MemoryEvent {
   co: set Write,
 }
 
+
 //address
 fact com_addr { co + rf + fr in address.~address }
 
@@ -65,6 +66,16 @@ fact inv_subscope { subscope.~subscope in iden }
 fact thread_subscope { no Thread.subscope }
 fact subscope_acyclic { acyclic[subscope] }
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// = More Shortcuts=
+
+fun coi : MemoryEvent->MemoryEvent { same_thread[co] }
+fun coe : MemoryEvent->MemoryEvent { co - coi }
+fun fri : MemoryEvent->MemoryEvent { same_thread[fr] }
+fun fre : MemoryEvent->MemoryEvent { fr - fri }
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // =PTX=
 
@@ -77,6 +88,21 @@ pred ptx_mm {
   no_thin_air and location_sc and atomicity and coherence
   and causality
 }
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// =PTX - MCA =
+
+//ppo: TODO add all the relations to PPO, for now testing with just Release/Acquire
+fun ppo : MemoryEvent->MemoryEvent { (Write->Release + Acquire->Read) & po }
+
+pred mca { acyclic[ppo + strong[rfe + coe + fre]] }
+
+pred ptx_mca {
+  no_thin_air and location_sc and atomicity and coherence
+  and causality and mca
+}
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // =Auxiliaries=

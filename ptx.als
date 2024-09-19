@@ -94,9 +94,12 @@ pred ptx_mm {
 // =PTX - MCA =
 
 //ppo: TODO add all the relations to PPO, for now testing with just Release/Acquire
-fun ppo : MemoryEvent->MemoryEvent { (Write->Release + Acquire->Read) & po }
+fun ppo : MemoryEvent->MemoryEvent { (po :> Release) + (Acquire <: po) + (po :> FenceRels) + (FenceAcqs <: po) + (Release <: po_loc :> Write) +
+(Read <: po_loc :> Acquire) + (FenceRels <: po :> Write) + (Read <: po :> FenceAcqs)}
+fun aob : MemoryEvent->MemoryEvent { rmw + (codom[rmw] <: rfi) }
+fun obs : MemoryEvent->MemoryEvent { rfe + coe + fre }
 
-pred mca { acyclic[ppo + strong[rfe + coe + fre]] }
+pred mca { acyclic[strong[ppo + obs + aob]] }
 
 pred ptx_mca {
   no_thin_air and location_sc and atomicity and coherence

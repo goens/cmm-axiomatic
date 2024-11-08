@@ -99,11 +99,14 @@ fun ppo : MemoryEvent->MemoryEvent { (po :> Release) + (Acquire <: po) + (po :> 
 fun aob : MemoryEvent->MemoryEvent { rmw + (codom[rmw] <: rfi) }
 fun obs : MemoryEvent->MemoryEvent { rfe + coe + fre }
 
-pred mca { acyclic[strong[ppo + obs + aob]] }
+pred scoped_mca { 
+  all s: Scope |
+    acyclic[sco[s] & (ppo + obs + aob)]
+}
 
-pred ptx_mca {
+pred ptx_mca_mm {
   no_thin_air and location_sc and atomicity and coherence
-  and causality and mca
+  and causality and scoped_mca
 }
 
 
@@ -150,6 +153,10 @@ fun strong[r: Event->Event]: Event->Event {
 }
 pred is_strong[r: Event->Event] {
   r in strong_r
+}
+
+fun sco[s : Scope] : Event->Event {
+  symmetric[(s->s).*subscope.start.*po]
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////

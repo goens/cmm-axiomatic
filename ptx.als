@@ -156,7 +156,7 @@ pred is_strong[r: Event->Event] {
 }
 
 fun sco[s : Scope] : Event->Event {
-  symmetric[(s->s).*subscope.start.*po]
+  Event <: equiv_closure[(s->s).*subscope.start.*po]:> Event 
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////

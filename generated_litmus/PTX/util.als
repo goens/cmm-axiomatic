@@ -1,1 +1,1 @@
-../../util.als
+/home/goens/code/cmm-axiomatic/util.als

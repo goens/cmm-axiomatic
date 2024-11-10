@@ -1,6 +1,7 @@
 module util
 
 fun symmetric[r: univ->univ] : univ->univ { r & ~r }
+fun equiv_closure[r : univ->univ] : univ->univ { *(r + ~r) }
 fun optional[f: univ->univ] : univ->univ  { iden + f }
 pred irreflexive[rel: univ->univ]         { no iden & rel }
 pred acyclic[rel: univ->univ]             { irreflexive[^rel] }

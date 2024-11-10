@@ -1,1 +1,1 @@
-../../ptx.als
+/home/goens/code/cmm-axiomatic/ptx.als

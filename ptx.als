@@ -94,14 +94,14 @@ pred ptx_mm {
 // =PTX - MCA =
 
 //ppo: TODO add all the relations to PPO, for now testing with just Release/Acquire
-fun ppo : MemoryEvent->MemoryEvent { (po :> Release) + (Acquire <: po) + (po :> FenceRels) + (FenceAcqs <: po) + (Release <: po_loc :> Write) +
-(Read <: po_loc :> Acquire) + (FenceRels <: po :> Write) + (Read <: po :> FenceAcqs)}
+fun ppo[s : Scope] : MemoryEvent->MemoryEvent {  (po :> (Release & scoped[s])) + ((Acquire & scoped[s]) <: po) + (po :> (FenceRels & scoped[s])) + ((scoped[s] & FenceAcqs) <: po) + ((scoped[s] & Release) <: po_loc :> Write) +
+(Read <: po_loc :> (Acquire & scoped[s])) + ((scoped[s] & FenceRels) <: po :> Write) + (Read <: po :> (FenceAcqs & scoped[s]))}
 fun aob : MemoryEvent->MemoryEvent { rmw + (codom[rmw] <: rfi) }
 fun obs : MemoryEvent->MemoryEvent { rfe + coe + fre }
 
 pred scoped_mca { 
   all s: Scope |
-    acyclic[sco[s] & (ppo + obs + aob)]
+    acyclic[sco[s] & strong[ppo[System] + obs + aob]]
 }
 
 pred ptx_mca_mm {

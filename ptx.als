@@ -73,10 +73,23 @@ pred location_sc { acyclic[strong[com] + po_loc] }
 pred atomicity   { no strong[fr].(strong[co]) & rmw }
 pred coherence   { location[Write <: cause :> Write] in ^co }
 pred causality   { irreflexive[optional[fr + rf].cause] }
-pred ptx_mm {
+pred new_old     { acyclic[ghbf + sghb_old] }
+pred new_alt     { acyclic[ghbf + sghb_alt] }
+pred ptx_mm_baseline {
   no_thin_air and location_sc and atomicity and coherence
   and causality
 }
+pred ptx_mm_old {
+	  ptx_mm_baseline and new_old
+}
+pred ptx_mm_alt {
+	  ptx_mm_baseline and new_alt
+}
+pred ptx_mm {
+	  ptx_mm_alt // for auto-generated
+}
+
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // =Auxiliaries=
@@ -98,6 +111,14 @@ fun cause_base : Event->Event  {
 fun cause : Event->Event {
   cause_base + (observation.(po_loc + cause_base))
 }
+
+fun eco : Event -> Event { ^co + rf + fr }
+fun hb : Event -> Event { ^po + strong[synchronizes + sc + sync[Releasers,Acquirers]]}
+fun ghbf : Event -> Event { strong[FenceSC;hb;eco;hb;FenceSC] }
+fun scb_old : Event -> Event { (optional[^po + location[hb]];^((^po;hb;^po) + co + fr);optional[^po + location[hb]]) + optional[^po + location[hb]]}
+fun scb_alt : Event -> Event { *po;*((^po;hb;^po) + co + fr + location[hb]);*po}
+fun sghb_old : Event -> Event { [FenceSC];hb;scb_old;hb;[FenceSC] } // leaving out [SC] since this model already removes SC reads/writes
+fun sghb_alt : Event -> Event { [FenceSC];hb;scb_alt;hb;[FenceSC] } // leaving out [SC] since this model already removes SC reads/writes
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

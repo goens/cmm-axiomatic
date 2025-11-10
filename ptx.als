@@ -71,10 +71,10 @@ fact subscope_acyclic { acyclic[subscope] }
 pred no_thin_air   { acyclic[rf + dep] }
 pred location_sc   { acyclic[strong[com] + po_loc] }
 pred atomicity     { no strong[fr].(strong[co]) & rmw }
-pred coherence_new { irreflexive[hb;optional[eco]] }
+pred coherence_new { irreflexive[(hb.optional[eco])] }
 pred coherence_old { location[Write <: cause :> Write] in ^co }
 pred causality     { irreflexive[optional[fr + rf].cause] }
-pred new_sc_axiom  { acylcic[scr] }
+pred new_sc_axiom  { acyclic[scr] }
 pred ptx_mm_baseline {
   no_thin_air and location_sc and atomicity and coherence_old
   and causality
@@ -82,7 +82,7 @@ pred ptx_mm_baseline {
 
 pred ptx_mm_new {
   no_thin_air and location_sc and atomicity and coherence_new
-  and new_sc_ax
+  and new_sc_axiom
 }
 pred ptx_mm {
 	  ptx_mm_new // for auto-generated
@@ -113,15 +113,11 @@ fun cause : Event->Event {
 
 fun eco : Event -> Event { ^co + rf + fr }
 fun hb : Event -> Event { ^(^po + strong[synchronizes + sync[Releasers,Acquirers]])}
-fun prop : Event -> Event {optional[hb];[Releasers];optional[strong[hb;([Write] + co + fr)]]}
-fun pscf : Event -> Event { [FenceSC];hb;eco;hb;[FenceSC]}
+fun prop : Event -> Event {(optional[hb]).(ident[Releasers]).optional[strong[hb.(ident[Write] + co + fr)]]}
+fun pscf : Event -> Event { (ident[FenceSC]).hb.eco.hb.(ident[FenceSC])}
 fun scr : Event -> Event { co + fr + prop + strong[pscf]}
 
-fun ghbf : Event -> Event { strong[FenceSC;hb;eco;hb;FenceSC] }
-fun scb_old : Event -> Event { (optional[^po + location[hb]];^((^po;hb;^po) + co + fr);optional[^po + location[hb]]) + optional[^po + location[hb]]}
-fun scb_alt : Event -> Event { *po;*((^po;hb;^po) + co + fr + location[hb]);*po}
-fun sghb_old : Event -> Event { [FenceSC];hb;scb_old;hb;[FenceSC] } // leaving out [SC] since this model already removes SC reads/writes
-fun sghb_alt : Event -> Event { [FenceSC];hb;scb_alt;hb;[FenceSC] } // leaving out [SC] since this model already removes SC reads/writes
+fun ghbf : Event -> Event { strong[(ident[FenceSC]).hb.eco.hb.(ident[FenceSC])] }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ALLOY_JAR=~/code/org.alloytools.alloy/org.alloytools.alloy.cli/target/org.alloytools.alloy.cli.jar
+ALLOY_JAR=~/code/org.alloytools.alloy/org.alloytools.pardinus.native/target/org.alloytools.pardinus.native.jar
 OUTPUT=results.csv
 DIR=$1
 echo "test,expected,result" > $OUTPUT

@@ -4,7 +4,6 @@ module ptx
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // =Shortcuts=
 
-fun com : MemoryEvent->MemoryEvent { rf + ^co + fr }
 fun rfi : MemoryEvent->MemoryEvent { same_thread[rf] }
 fun rfe : MemoryEvent->MemoryEvent { rf - rfi }
 
@@ -69,12 +68,12 @@ fact subscope_acyclic { acyclic[subscope] }
 // =PTX=
 
 pred no_thin_air   { acyclic[rf + dep] }
-pred location_sc   { acyclic[strong[com] + po_loc] }
+pred location_sc   { acyclic[strong[^co + rf + fr] + po_loc] }
 pred atomicity     { no strong[fr].(strong[co]) & rmw }
-pred coherence_new { irreflexive[(hb).(optional[eco])] }
 pred coherence_old { location[Write <: cause :> Write] in ^co }
 pred causality     { irreflexive[optional[fr + rf].cause] }
-pred new_sc_axiom  { acyclic[scr] }
+pred coherence_new { irreflexive[(hb).(optional[eco])] }
+pred new_sc_axiom  { acyclic[prop] }
 pred ptx_mm_baseline {
   no_thin_air and location_sc and atomicity and coherence_old
   and causality
@@ -115,11 +114,13 @@ fun cause : Event->Event {
   cause_base + (observation.(po_loc + cause_base))
 }
 
+fun com : Event -> Event {strong[rf] + ^co + fr}
+fun ca : Event -> Event {co + fr}
 fun eco : Event -> Event { ^(co + rf + fr) }
 fun hb : Event -> Event { ^(^po + strong[synchronizes + sync[Releasers,Acquirers]])}
-fun prop : Event -> Event {(optional[hb]).(ident[Releasers]).(strong[hb.(co + fr)]) + hb.(ident[Releasers]) + (optional[hb]).(strong[synchronizes + sync[Releasers,Acquirers]])}
+fun prop : Event -> Event {(optional[(ident[FenceSC].hb)]).(strong[ca]) + strong[pscf] + hb.(ident[Releasers]) + (optional[hb]).synchronizes}
 fun prop_old : Event -> Event {hb.(ident[Releasers]) + (optional[hb]).(ident[Releasers]).(strong[hb.(ident[Write] + co + fr)])}
-fun pscf : Event -> Event { (ident[FenceSC]).hb.eco.hb.(ident[FenceSC])}
+fun pscf : Event -> Event { (ident[FenceSC]).hb.com.hb.(ident[FenceSC])}
 fun scr : Event -> Event { co + fr + prop + strong[pscf]}
 fun scr_old : Event -> Event { co + fr + prop + strong[pscf]}
 fun ghbf : Event -> Event { strong[(ident[FenceSC]).hb.eco.hb.(ident[FenceSC])] }

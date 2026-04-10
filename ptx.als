@@ -114,13 +114,12 @@ fun cause : Event->Event {
   cause_base + (observation.(po_loc + cause_base))
 }
 
-fun com : Event -> Event {strong[rf] + ^co + fr}
 fun ca : Event -> Event {co + fr}
-fun eco : Event -> Event { ^(co + rf + fr) }
+fun eco : Event -> Event { ^(strong[(^co + rf + fr)]) }
 fun hb : Event -> Event { ^(^po + strong[synchronizes + sync[Releasers,Acquirers]])}
 fun prop : Event -> Event {(optional[strong[(ident[FenceSC].hb)]]).(strong[ca]) + strong[pscf] + hb.(ident[Releasers]) + (optional[hb]).synchronizes}
 fun prop_old : Event -> Event {hb.(ident[Releasers]) + (optional[hb]).(ident[Releasers]).(strong[hb.(ident[Write] + co + fr)])}
-fun pscf : Event -> Event { (ident[FenceSC]).hb.com.hb.(ident[FenceSC])}
+fun pscf : Event -> Event { (ident[FenceSC]).hb.eco.hb.(ident[FenceSC])}
 fun scr : Event -> Event { co + fr + prop + strong[pscf]}
 fun scr_old : Event -> Event { co + fr + prop + strong[pscf]}
 fun ghbf : Event -> Event { strong[(ident[FenceSC]).hb.eco.hb.(ident[FenceSC])] }
